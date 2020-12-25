@@ -4,10 +4,10 @@
   <!-- 首屏 -->
   <div class="init">
     <div class="top">
-      <img src="https://imageqiniu.taigu.ink/init-logo.png?imageslim" alt="">
+      <img src="~assets/img/logo.jpg" alt="logo">
     </div>
     <div class="bottom">
-      <div class="msg">开启工业5.0</div>
+      <div class="msg">关注、提升web前段技术</div>
     </div>
     <div class="linebg">
       <div class="line"></div>
@@ -169,7 +169,6 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: rgba(49,76,130,0.4);
   overflow: hidden;
   z-index: 100;
 }
@@ -183,12 +182,26 @@ export default {
   animation: leaveTop 2s ease-out forwards;
 }
 .init .top img{
-  width: 160px;
-  height: 45px;
+  width: 400px;
+  height: 70px;
   position: absolute;
   left: 50%;
   bottom: 12px;
-  margin-left: -80px;
+  margin-left: -200px;
+}
+.init .linebg{
+  width: 100%;
+  height: 6px;
+  position: absolute;
+  top: 50%;
+  margin-top: -3px;
+}
+.init .linebg .line{
+  width: 0%;
+  height: 6px;
+  margin: 0 auto;
+  background: rgba(49,75,130,1);
+  animation: initLine 1s ease-out forwards;
 }
 .init .bottom{
   position: absolute;
@@ -200,14 +213,14 @@ export default {
   animation: leaveBottom 2s ease-out forwards;
 }
 .init .bottom .msg{
-  width: 400px;
+  width: 600px;
   height:100px;
   text-align: center;
   position: absolute;
   top: 0;
   left: 50%;
-  margin-left: -200px;
-  font-size:72px;
+  margin-left: -300px;
+  font-size:2.8em;
   line-height:100px;
   font-weight: lighter;
 }
@@ -225,6 +238,22 @@ export default {
     color: rgba(49,75,130,0);
   }
 }
+@keyframes initLine {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 50%;
+  }
+  95% {
+    width: 99%;
+    background: rgba(49,75,130,1);
+  }
+  100% {
+    width: 100%;
+    background: rgba(49,75,130,0);
+  }
+}
 @keyframes leaveBottom{
   0% {
     bottom: 0;
@@ -237,6 +266,21 @@ export default {
   100% {
     bottom: -50%;
     color: rgba(49,75,130,0);
+  }
+}
+/* 手机端 */
+@media (max-width: 768px) {
+  .init .top img {
+    width: 200px;
+    height: 35px;
+    margin-left: -100px;
+  }
+  .init .bottom .msg {
+    width: 300px;
+    height:50px;
+    margin-left: -150px;
+    font-size:1.4em;
+    line-height:50px;
   }
 }
 </style>
