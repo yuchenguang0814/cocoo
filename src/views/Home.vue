@@ -14,9 +14,12 @@
     </div>
   </div>
   <!-- 第一屏 -->
-  <div class="htmleaf-content">
+  <div id="first">
     <div class="content">
       <div class="container">
+        <!-- 时钟 -->
+        <canvas id="canvas" width="500" height="500" class="animated flipInX"></canvas>
+        <!-- 小猫 -->
         <svg id="bongo-cat" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 787.3 433.8">
           <defs>
             <symbol id="eye" data-name="eye" viewBox="0 0 19.2 18.7">
@@ -152,19 +155,126 @@
 <script>
 export default {
   name: 'Home',
-  components: {}
+  components: {},
+  data () {
+    return {
+      isDay: true
+    }
+  },
+  mounted () {
+    this.TimeCanvas()
+  },
+  created () {
+    console.log(this.$(window).height())
+    this.$('#first').css('height', this.$(window).height())
+  },
+  methods: {
+    // 时钟样式
+    TimeCanvas () {
+      const that = this
+      const ctx = that.$('#canvas')[0].getContext('2d')
+      ctx.lineWidth = 17
+      ctx.shadowBlur = 15
+      ctx.strokeStyle = '#00ffff'
+      ctx.shadowColor = '#00ffff'
+      function degToRad (degree) {
+        const factor = Math.PI / 180
+        return degree * factor
+      }
+      function renderTime () {
+        // 时间
+        const now = new Date()
+        const today = now.toDateString()
+        let time = now.toLocaleTimeString()
+        const hrs = now.getHours()
+        const min = now.getMinutes()
+        const sec = now.getSeconds()
+        const mil = now.getMilliseconds()
+        const smoothsec = sec + (mil / 1000)
+        const smoothmin = min + (smoothsec / 60)
+        ctx.fillRect(0, 0, 500, 500)
+        // 设置小时
+        ctx.beginPath()
+        ctx.arc(250, 250, 200, degToRad(270), degToRad((hrs * 30) - 90))
+        ctx.stroke()
+        // 设置分钟
+        ctx.beginPath()
+        ctx.arc(250, 250, 170, degToRad(270), degToRad((smoothmin * 6) - 90))
+        ctx.stroke()
+        // 设置秒
+        ctx.beginPath()
+        ctx.arc(250, 250, 140, degToRad(270), degToRad((smoothsec * 6) - 90))
+        ctx.stroke()
+        // 设置日期
+        ctx.font = '25px Helvetica'
+        if (that.isDay) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'
+        } else {
+          ctx.fillStyle = 'rgba(00, 255, 255, 1)'
+        }
+        ctx.fillText(today, 150, 250)
+        // 设置时间
+        ctx.font = '25px Helvetica Bold'
+        if (that.isDay) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'
+        } else {
+          ctx.fillStyle = 'rgba(00, 255, 255, 1)'
+          time = '晚上' + time.substring(2, time.length)
+        }
+        ctx.fillText(time + ':' + mil, 145, 300)
+        if (that.isDay) {
+          if (hrs < 18 || hrs >= 6) {
+            const gradient = ctx.createRadialGradient(250, 250, 5, 250, 250, 300)
+            gradient.addColorStop(0, '#fff')
+            gradient.addColorStop(1, 'rgba(255,245,247,1)')
+            ctx.strokeStyle = 'rgba(49,75,130,1)'
+            ctx.shadowColor = '#03303a'
+            ctx.fillStyle = gradient
+            that.$('body').css('background', 'rgba(255,245,247,1)')
+          } else {
+            that.isDay = false
+          }
+        } else {
+          if (hrs >= 18 || hrs < 6) {
+            const gradient = ctx.createRadialGradient(250, 250, 5, 250, 250, 300)
+            ctx.strokeStyle = '#00ffff'
+            ctx.shadowColor = '#00ffff'
+            gradient.addColorStop(0, '#03303a')
+            gradient.addColorStop(1, 'rgba(3,22,52,1)')
+            ctx.fillStyle = gradient
+            that.$('body').css('background', 'rgba(3,22,52,1)')
+          } else {
+            that.isDay = true
+          }
+        }
+      }
+      setInterval(renderTime, 40)
+    }
+  }
 }
 </script>
 <style>
-@import "../assets/css/htmleaf-demo.css";
 @import "../assets/css/normalize.css";
 @import "../assets/css/style.css";
+#first {
+  width: 100%;
+}
 .bounceInDown {
+  animation-delay:2.2s;
+}
+#canvas.flipInX{
   animation-delay:2s;
 }
 .container {
   padding-top: 100px;
 }
+#canvas {
+  position: absolute;
+  top: 70px;
+  right: 50px;
+  width: 300px;
+}
+/* 首屏样式 */
 .init {
   position: absolute;
   width: 100%;
@@ -281,6 +391,12 @@ export default {
     margin-left: -150px;
     font-size:1.4em;
     line-height:50px;
+  }
+  #canvas {
+    position: absolute;
+    top: 70px;
+    right: 25px;
+    width: 200px;
   }
 }
 </style>

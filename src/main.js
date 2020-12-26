@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import $ from 'jquery'
 import animated from 'animate.css'
+import 'swiper/css/swiper.css'
 Vue.prototype.$ = $
 Vue.use(animated)
 Vue.config.productionTip = false
