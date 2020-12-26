@@ -241,7 +241,7 @@ export default {
         }
         ctx.fillText(time + ':' + mil, 150, 300)
         if (that.isDay) {
-          if (hrs < 18 || hrs >= 6) {
+          if (hrs < 18 && hrs >= 6) {
             const gradient = ctx.createRadialGradient(250, 250, 5, 250, 250, 300)
             gradient.addColorStop(0, '#fff')
             gradient.addColorStop(1, 'rgba(255,245,247,1)')
