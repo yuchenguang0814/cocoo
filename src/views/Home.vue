@@ -158,7 +158,16 @@ export default {
   components: {},
   data () {
     return {
-      isDay: true
+      isDay: true,
+      weekday: [
+        '星期日',
+        '星期一',
+        '星期二',
+        '星期三',
+        '星期四',
+        '星期五',
+        '星期六'
+      ]
     }
   },
   mounted () {
@@ -186,6 +195,7 @@ export default {
         const now = new Date()
         const today = now.toDateString()
         let time = now.toLocaleTimeString()
+        const day = now.getDay()
         const hrs = now.getHours()
         const min = now.getMinutes()
         const sec = now.getSeconds()
@@ -205,6 +215,14 @@ export default {
         ctx.beginPath()
         ctx.arc(250, 250, 140, degToRad(270), degToRad((smoothsec * 6) - 90))
         ctx.stroke()
+        // 设置星期
+        ctx.font = '25px Helvetica'
+        if (that.isDay) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'
+        } else {
+          ctx.fillStyle = 'rgba(00, 255, 255, 1)'
+        }
+        ctx.fillText(that.weekday[day], 150, 200)
         // 设置日期
         ctx.font = '25px Helvetica'
         if (that.isDay) {
@@ -221,7 +239,7 @@ export default {
           ctx.fillStyle = 'rgba(00, 255, 255, 1)'
           time = '晚上' + time.substring(2, time.length)
         }
-        ctx.fillText(time + ':' + mil, 145, 300)
+        ctx.fillText(time + ':' + mil, 150, 300)
         if (that.isDay) {
           if (hrs < 18 || hrs >= 6) {
             const gradient = ctx.createRadialGradient(250, 250, 5, 250, 250, 300)
