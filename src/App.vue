@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <!-- 导航栏 -->
-    <nav id="nav-header" class="navbar">
+    <!-- <nav id="nav-header" class="navbar">
       <div class="song">
         <p id="f" @click='fade' class="animated_zoomInLeft">{{this.$store.state}}</p>
       </div>
-    </nav>
+    </nav> -->
     <router-view/>
   </div>
 </template>
