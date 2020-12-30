@@ -1,12 +1,20 @@
 <template>
   <div ref="canvas">
-    <canvas id="canvas" width="500" height="500" class="animated flipInX"></canvas>
+    <canvas id="canvas" width="500" height="500" :class="isanimated ? 'animated flipInX' : ''"></canvas>
   </div>
 </template>
 <script>
 export default {
   name: '',
   components: {
+  },
+  props: {
+    isanimated: {
+      type: Boolean,
+      default () {
+        return true
+      }
+    }
   },
   data () {
     return {
@@ -28,6 +36,7 @@ export default {
         document.querySelector('body').setAttribute('style', 'background-color: rgba(255,245,247,1)')
         document.getElementById('table').firstChild.setAttribute('style', 'fill: #fff')
       } else {
+        console.log(1)
         document.querySelector('body').setAttribute('style', 'background-color: rgba(3,22,52,1)')
         document.getElementById('table').firstChild.setAttribute('style', 'fill: rgba(3,22,52,1)')
       }
@@ -137,6 +146,12 @@ export default {
   top: 10vh;
   right: 20vh;
   width: 20vw;
+}
+#canvas.flipInX{
+  animation-delay:2s;
+}
+#canvas.flipInX{
+  animation-delay:2s;
 }
 @media (max-width: 768px) {
   #canvas {

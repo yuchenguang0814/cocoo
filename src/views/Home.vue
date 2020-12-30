@@ -1,6 +1,7 @@
 <template>
 <!-- 首页 -->
-<div class="home" :style="'height:' + height" @wheel.prevent="scrollBarWheel">
+<div>
+<div class="home" :style="`height: ${height}px;transform: translate(0, ${lateY}px)`" @wheel.prevent="scrollBarWheel">
   <!-- 首屏 -->
   <div class="init">
     <div class="top">
@@ -14,14 +15,19 @@
     </div>
   </div>
   <!-- 第一屏 -->
-  <div id="1" :class="index === 1 ? 'slide active': 'slide'" :style="'height:' + height">
+  <div id="1" :class="index === 1 ? 'slide active': 'slide'" :style="'height:' + height + 'px'">
     <div class="card">
       <bongo-cat/>
-      <canvas-time/>
+      <canvas-time :isanimated = "isanimated"/>
+    </div>
+    <div class="banner-next" @click="nextSlide">
+        <span class="next-text">
+          滑动查看下一页
+        </span>
     </div>
   </div>
   <!-- 第二 -->
-  <div id="2" :class="index === 2 ? 'slide active': 'slide'" :style="'height:' + height">
+  <div id="2" :class="index === 2 ? 'slide active': 'slide'" :style="'height:' + height + 'px'">
     <div class="card">
       <div class="card-img" id="img01"></div>
         <div class="card-content">
@@ -33,21 +39,22 @@
     </div>
   </div>
   <!-- 第三 -->
-  <div id="3" :class="index === 3 ? 'slide active': 'slide'" :style="'height:' + height">
+  <div id="3" :class="index === 3 ? 'slide active': 'slide'" :style="'height:' + height + 'px'">
     <div class="card">
       <div class="card-img" id="img01"></div>
         <div class="card-content">
-        <p class="card-theme">图片说明</p>
-        <h2 class="card-header">详细内容</h2>
-        <p class="card-para">by Eugene Purcell</p>
+        <p class="card-theme">图片说明3</p>
+        <h2 class="card-header">详细内容3</h2>
+        <p class="card-para">by Eugene Purcell3</p>
         <a href="" class="card-link">Read</a>
       </div>
     </div>
   </div>
-  <div class="prevnext">
-    <button class="pn-btn" id="prev" @click="prevSlide"></button>
-    <button class="pn-btn" id="next" @click="nextSlide"></button>
-  </div>
+</div>
+<div class="prevnext">
+  <button class="pn-btn" id="prev" @click="prevSlide"></button>
+  <button class="pn-btn" id="next" @click="nextSlide"></button>
+</div>
 </div>
 </template>
 
@@ -62,42 +69,40 @@ export default {
   },
   data () {
     return {
-      height: '',
-      index: 1
+      height: window.innerHeight,
+      index: 1,
+      lateY: 0,
+      isanimated: true
+    }
+  },
+  watch: {
+    lateY () {
+      if (this.lateY === 0) {
+        this.isanimated = true
+        console.log(document.getElementById('canvas').style.animationDelay = '.5s')
+      } else {
+        this.isanimated = false
+      }
     }
   },
   mounted () {
     console.log(this)
   },
   created () {
-    // 设置高度
-    this.setHeight()
-    // 初始化轮播
-    this.initSlide()
   },
   methods: {
     prevSlide () {
       if (this.index > 1) {
         this.index--
       }
+      this.lateY = -(this.index - 1) * this.height
     },
     nextSlide () {
       const homeSlide = document.getElementsByClassName('slide')
       if (this.index < homeSlide.length) {
         this.index++
       }
-    },
-    // 初始化轮播
-    initSlide () {
-      const activeSlide = document.getElementsByClassName('active')
-      const homeSlide = document.getElementsByClassName('slide')
-      const slideNavPrev = document.getElementById('prev')
-      const slideNavNext = document.getElementById('next')
-      console.log(activeSlide + '------' + homeSlide + '------' + slideNavPrev + '------' + slideNavNext)
-    },
-    // 获取浏览器高度
-    setHeight () {
-      this.height = window.innerHeight + 'px'
+      this.lateY = -(this.index - 1) * this.height
     },
     // 监听滚轮
     scrollBarWheel (e) {
@@ -108,8 +113,49 @@ export default {
 </script>
 <style>
 @import "../assets/css/style.css";
+::-webkit-scrollbar {
+  width: 0 !important;
+}
+::-webkit-scrollbar {
+  width: 0 !important;height: 0;
+}
 .home {
-  overflow: hidden;
+  transition: transform 1s ease-in-out;
+}
+.banner-next {
+  z-index: 99;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  cursor: pointer;
+  text-align: center;
+  color: #ffffff;
+}
+.banner-next .next-text {
+    -webkit-animation: fadeInDown 2s infinite;
+    -moz-animation: fadeInDown 2s infinite;
+    -o-animation: fadeInDown 2s infinite;
+    -ms-animation: fadeInDown 2s infinite;
+    animation: fadeInDown 2s infinite;
+    position: relative;
+    bottom: 20px;
+}
+.banner-next .next-text:before {
+  content: 'V';
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  animation: flipInx 2s infinite;
 }
 .slide {
   z-index: 110;
@@ -125,7 +171,6 @@ export default {
   width: 100%;
   height: 100vh;
   display: flex;
-  background: #fff;
 }
 .card-img {
   background-position: center;
@@ -135,6 +180,7 @@ export default {
   background-repeat: no-repeat;
 }
 .card-content {
+  z-index: 12;
   padding: 10% 5%;
   box-sizing: border-box;
   width: 50%;
@@ -181,17 +227,15 @@ export default {
 /*前后导航按钮样式*/
 .prevnext {
   z-index: 111;
-  position: absolute;
+  position: fixed;
   width: 4vmin;
   height: 8vmin;
-  right: 2%;
-  bottom: 0;
-  top: 80%;
-  color: black;
+  top:80%;
+  right: 10px;
   margin: auto 0;
 }
 .pn-btn {
-  color: black;
+  color: #fff;
   width: 100%;
   height: 50%;
   border: 0;
@@ -227,9 +271,6 @@ export default {
 }
 .bounceInDown {
   animation-delay:2.2s;
-}
-#canvas.flipInX{
-  animation-delay:2s;
 }
 /* 首屏样式 */
 .init {
