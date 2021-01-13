@@ -17,7 +17,7 @@ export default {
   methods: {
     fade () {
       console.log(1)
-      this.$('#f').addClass('animated_zoomOutRight')
+      // this.$('#f').addClass('animated_zoomOutRight')
     }
   }
 }

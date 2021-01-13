@@ -69,7 +69,7 @@ export default {
   },
   data () {
     return {
-      height: window.innerHeight,
+      height: 800,
       index: 1,
       lateY: 0,
       isanimated: true
